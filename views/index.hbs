@@ -1,3 +1,16 @@
 <h1>Facebook Testing OAuth</h1>
 
-<h2><a href='/auth/facebook/callback'>Click here to sign in with Facebook</a></h2>
+<!--
+    this if is checking if there is a user object in the session.
+    apparently by it self.
+-->
+{{#if user}}
+
+    <h2>Welcome {{user.displayName}}</h2>
+    <br>
+    <h3><a href="/logout">Logout</a></h3>
+
+    {{else}}
+    <h2><a href='/auth/facebook/callback'>Click here to sign in with Facebook</a></h2>
+
+{{/if}}

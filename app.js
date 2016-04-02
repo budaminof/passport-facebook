@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var passport = require('passport');
 var FacebookStrategy = require('passport-facebook').Strategy;
+var cookieSession = require('cookie-session');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -24,10 +25,15 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(cookieSession({
+    keys: [
+        process.env.SECRET,
+        process.env.SECRET2
+    ]
+}))
 app.use(express.static(path.join(__dirname, 'public')));
-
-app.use('/', routes);
-app.use('/users', users);
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 //passport-facebook OAuth
@@ -37,9 +43,17 @@ passport.use(new FacebookStrategy({
     callbackURL: process.env.HOST + '/auth/facebook/callback'
   },
   function(accessToken, refreshToken, profile, cb) {
-    User.findOrCreate({ facebookId: profile.id }, function (err, user) {
-      return cb(err, user);
-    });
+      console.log('===============================================================');
+      console.log('accessToken', accessToken);
+      console.log('refreshToken', refreshToken);
+      console.log('profile',profile);
+      console.log('cb',cb);
+
+    //User.will be a function for population the database which I dont have!
+    // User.findOrCreate({ facebookId: profile.id }, function (err, user) {
+    //   return cb(err, user);
+    // });
+    return cb(null, {id: profile.id, displayName: profile.displayName ,token: accessToken});
   }
 ));
 
@@ -55,12 +69,31 @@ app.get('/auth/facebook/callback',
     // failureRedirect: '/login'
   });
 
+  passport.serializeUser(function(user, done) {
+      done(null, user);
+    });
+
+  passport.deserializeUser(function(obj, done) {
+      done(null, obj);
+  });
+
+  app.use(function (req, res, next) {
+      if(req.session.passport) {
+          res.locals.user = req.session.passport.user;
+      }
+    next();
+    });
+
+  app.use('/', routes);
+  app.use('/users', users);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
+
 
 // error handlers
 
