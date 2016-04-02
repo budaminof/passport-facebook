@@ -43,7 +43,7 @@ passport.use(new FacebookStrategy({
     callbackURL: process.env.HOST + '/auth/facebook/callback'
   },
   function(accessToken, refreshToken, profile, cb) {
-      console.log('===============================================================');
+      console.log('===============================================================Passport');
       console.log('accessToken', accessToken);
       console.log('refreshToken', refreshToken);
       console.log('profile',profile);
