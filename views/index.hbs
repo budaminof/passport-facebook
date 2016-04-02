@@ -3,6 +3,10 @@
 
 {{#if user}}
 
+    {{#if profile}}
+        <img src="{{profile.pictureUrl}}">
+    {{/if}}
+
     <h2>Welcome {{user.displayName}}</h2>
     <br>
     <h3><a href="/logout">Logout</a></h3>

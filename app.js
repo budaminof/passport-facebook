@@ -44,10 +44,10 @@ passport.use(new FacebookStrategy({
   },
   function(accessToken, refreshToken, profile, cb) {
       console.log('===============================================================Passport');
-      console.log('accessToken', accessToken);
-      console.log('refreshToken', refreshToken);
+    //   console.log('accessToken', accessToken);
+    //   console.log('refreshToken', refreshToken);
       console.log('profile',profile);
-      console.log('cb',cb);
+    //   console.log('cb',cb);
 
     //User.will be a function for population the database which I dont have!
     // User.findOrCreate({ facebookId: profile.id }, function (err, user) {
