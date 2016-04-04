@@ -5,6 +5,7 @@ var unirest = require('unirest');
 /* GET home page. */
 router.get('/', function(req, res, next) {
     console.log('==============session',req.session.passport);
+    if (!req.session.passport) return res.render('index'); 
     unirest.get('https://graph.facebook.com/' + req.session.passport.user.id + '?fields=picture.type(small)')
     .header('Authorization', 'Bearer ' + req.session.passport.user.token)
     .header('x-li-format', 'json')
